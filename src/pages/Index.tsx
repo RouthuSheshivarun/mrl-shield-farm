@@ -1,13 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import Layout from '@/components/Layout';
+import Login from '@/pages/Login';
+import FarmerDashboard from '@/pages/FarmerDashboard';
+import VeterinarianDashboard from '@/pages/VeterinarianDashboard';
+import RegulatorDashboard from '@/pages/RegulatorDashboard';
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+  const { user, isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="mb-4 text-2xl font-bold">Loading...</h1>
+        </div>
       </div>
-    </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  return (
+    <Layout>
+      {user?.role === 'farmer' && <FarmerDashboard />}
+      {user?.role === 'veterinarian' && <VeterinarianDashboard />}
+      {user?.role === 'regulator' && <RegulatorDashboard />}
+    </Layout>
   );
 };
 
