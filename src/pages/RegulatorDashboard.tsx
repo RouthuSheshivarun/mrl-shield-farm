@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ interface DrugUsageStats {
 
 const RegulatorDashboard = () => {
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [regionStats, setRegionStats] = useState<RegionStats[]>([]);
   const [drugUsageStats, setDrugUsageStats] = useState<DrugUsageStats[]>([]);
   const [recentAlerts, setRecentAlerts] = useState<ComplianceAlert[]>([]);
@@ -98,8 +100,8 @@ const RegulatorDashboard = () => {
         id: '1',
         type: 'mrl_violation',
         severity: 'high',
-        title: 'Potential MRL Violation',
-        message: 'Farm FARM001 may have MRL violation in dairy products',
+        title: t('regulator.complianceIssues'),
+        message: t('app.description'),
         treatmentId: '1',
         farmId: 'FARM001',
         dueDate: '2024-01-20',
@@ -110,8 +112,8 @@ const RegulatorDashboard = () => {
         id: '2',
         type: 'missing_approval',
         severity: 'medium',
-        title: 'Missing Veterinary Approval',
-        message: 'Treatment at Farm FARM003 lacks veterinary approval',
+        title: t('vet.pendingApprovals'),
+        message: t('common.awaitingVetApproval'),
         treatmentId: '3',
         farmId: 'FARM003',
         dueDate: '2024-01-19',
@@ -123,7 +125,7 @@ const RegulatorDashboard = () => {
     setRegionStats(mockRegionStats);
     setDrugUsageStats(mockDrugStats);
     setRecentAlerts(mockAlerts);
-  }, []);
+  }, [language, t]);
 
   const totalFarms = regionStats.reduce((sum, region) => sum + region.totalFarms, 0);
   const totalActiveFarms = regionStats.reduce((sum, region) => sum + region.activeFarms, 0);
@@ -149,11 +151,9 @@ const RegulatorDashboard = () => {
     <div className="space-y-6">
       {/* Welcome Header */}
       <div className="bg-gradient-to-r from-primary to-primary-glow rounded-lg p-6 text-primary-foreground">
-        <h1 className="text-2xl font-bold">Welcome, {user?.name}</h1>
-        <p className="text-primary-foreground/90">Region: {user?.region}</p>
-        <p className="mt-2 text-sm">
-          Monitor antimicrobial usage compliance across farms in your jurisdiction
-        </p>
+        <h1 className="text-2xl font-bold">{t('common.welcome')}, {user?.name}</h1>
+        <p className="text-primary-foreground/90">{t('common.region')}: {user?.region}</p>
+        <p className="mt-2 text-sm">{t('app.description')}</p>
       </div>
 
       {/* Filters */}
@@ -164,10 +164,10 @@ const RegulatorDashboard = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 3 months</SelectItem>
-            <SelectItem value="1y">Last year</SelectItem>
+            <SelectItem value="7d">7d</SelectItem>
+            <SelectItem value="30d">30d</SelectItem>
+            <SelectItem value="90d">90d</SelectItem>
+            <SelectItem value="1y">1y</SelectItem>
           </SelectContent>
         </Select>
 
@@ -177,7 +177,7 @@ const RegulatorDashboard = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Regions</SelectItem>
+            <SelectItem value="all">{t('dashboard.overview')}</SelectItem>
             <SelectItem value="punjab">Punjab</SelectItem>
             <SelectItem value="haryana">Haryana</SelectItem>
             <SelectItem value="up">Uttar Pradesh</SelectItem>
@@ -186,7 +186,7 @@ const RegulatorDashboard = () => {
 
         <Button variant="outline">
           <Download className="h-4 w-4 mr-2" />
-          Export Report
+          {t('regulator.generateReport')}
         </Button>
       </div>
 
@@ -194,53 +194,53 @@ const RegulatorDashboard = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Farms</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('regulator.totalFarms')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalFarms}</div>
             <p className="text-xs text-muted-foreground">
-              {totalActiveFarms} active this month
+              {totalActiveFarms} {t('farmer.activeTreatments')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Treatments</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('farmer.activeTreatments')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalTreatments}</div>
-            <p className="text-xs text-muted-foreground">This period</p>
+            <p className="text-xs text-muted-foreground">{t('common.thisPeriod')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Compliance Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('farmer.complianceScore')}</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-success">{overallComplianceRate}%</div>
-            <p className="text-xs text-muted-foreground">Overall compliance</p>
+            <p className="text-xs text-muted-foreground">{t('common.overallCompliance')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Violations</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('regulator.complianceIssues')}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">{totalViolations}</div>
-            <p className="text-xs text-muted-foreground">Require attention</p>
+            <p className="text-xs text-muted-foreground">{t('common.requireAttention')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('layout.alerts')}</CardTitle>
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -253,19 +253,17 @@ const RegulatorDashboard = () => {
       {/* Main Content Tabs */}
       <Tabs defaultValue="regions" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="regions">Regional Overview</TabsTrigger>
-          <TabsTrigger value="drugs">Drug Usage</TabsTrigger>
-          <TabsTrigger value="alerts">Alerts</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
+          <TabsTrigger value="regions">{t('dashboard.overview')}</TabsTrigger>
+          <TabsTrigger value="drugs">{t('treatment.drug')}</TabsTrigger>
+          <TabsTrigger value="alerts">{t('layout.alerts')}</TabsTrigger>
+          <TabsTrigger value="compliance">{t('farmer.complianceScore')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="regions" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Regional Statistics</CardTitle>
-              <CardDescription>
-                Antimicrobial usage and compliance by region
-              </CardDescription>
+              <CardTitle>{t('dashboard.overview')}</CardTitle>
+              <CardDescription>{t('app.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -280,23 +278,23 @@ const RegulatorDashboard = () => {
                     
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Total Farms</p>
+                        <p className="text-muted-foreground">{t('regulator.totalFarms')}</p>
                         <p className="font-semibold">{region.totalFarms}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Active Farms</p>
+                        <p className="text-muted-foreground">{t('farmer.activeTreatments')}</p>
                         <p className="font-semibold">{region.activeFarms}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Total Treatments</p>
+                        <p className="text-muted-foreground">{t('treatment.add')}</p>
                         <p className="font-semibold">{region.totalTreatments}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Violations</p>
+                        <p className="text-muted-foreground">{t('regulator.complianceIssues')}</p>
                         <p className="font-semibold text-destructive">{region.violations}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Compliance Rate</p>
+                        <p className="text-muted-foreground">{t('farmer.complianceScore')}</p>
                         <p className="font-semibold text-success">{region.complianceRate}%</p>
                       </div>
                     </div>
@@ -310,10 +308,8 @@ const RegulatorDashboard = () => {
         <TabsContent value="drugs" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Drug Usage Statistics</CardTitle>
-              <CardDescription>
-                Most commonly used antimicrobials and their compliance rates
-              </CardDescription>
+              <CardTitle>{t('treatment.drug')}</CardTitle>
+              <CardDescription>{t('app.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -322,24 +318,24 @@ const RegulatorDashboard = () => {
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-lg font-semibold">{drug.drugName}</h3>
                       <div className="flex items-center space-x-2">
-                        <Badge variant="outline">{drug.usageCount} uses</Badge>
+                        <Badge variant="outline">{drug.usageCount}</Badge>
                         <Badge variant={drug.complianceRate >= 90 ? 'default' : 'secondary'}>
-                          {drug.complianceRate}% Compliant
+                          {drug.complianceRate}%
                         </Badge>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-3 gap-4 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Total Usage</p>
+                        <p className="text-muted-foreground">{t('dashboard.recentActivity')}</p>
                         <p className="font-semibold">{drug.usageCount}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Violations</p>
+                        <p className="text-muted-foreground">{t('regulator.complianceIssues')}</p>
                         <p className="font-semibold text-destructive">{drug.violations}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Compliance Rate</p>
+                        <p className="text-muted-foreground">{t('farmer.complianceScore')}</p>
                         <p className="font-semibold text-success">{drug.complianceRate}%</p>
                       </div>
                     </div>
@@ -353,10 +349,8 @@ const RegulatorDashboard = () => {
         <TabsContent value="alerts" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Active Compliance Alerts</CardTitle>
-              <CardDescription>
-                Recent alerts requiring regulatory attention
-              </CardDescription>
+              <CardTitle>{t('layout.alerts')}</CardTitle>
+              <CardDescription>{t('app.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {recentAlerts.length === 0 ? (
@@ -380,17 +374,17 @@ const RegulatorDashboard = () => {
                           </div>
                           <p className="text-sm text-muted-foreground mb-2">{alert.message}</p>
                           <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                            <span>Farm: {alert.farmId}</span>
-                            <span>Due: {alert.dueDate}</span>
-                            <span>Created: {new Date(alert.createdAt).toLocaleDateString()}</span>
+                            <span>{t('common.farmId')}: {alert.farmId}</span>
+                            <span>{t('treatment.withdrawalPeriod')}: {alert.dueDate}</span>
+                            <span>{new Date(alert.createdAt).toLocaleDateString()}</span>
                           </div>
                         </div>
                         <div className="flex space-x-2">
                           <Button variant="outline" size="sm">
-                            View Details
+                            {t('common.viewDetails')}
                           </Button>
                           <Button size="sm">
-                            Take Action
+                            {t('common.takeAction')}
                           </Button>
                         </div>
                       </div>
@@ -405,22 +399,20 @@ const RegulatorDashboard = () => {
         <TabsContent value="compliance" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Compliance Monitoring</CardTitle>
-              <CardDescription>
-                Detailed compliance tracking and enforcement tools
-              </CardDescription>
+              <CardTitle>{t('farmer.complianceScore')}</CardTitle>
+              <CardDescription>{t('app.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {/* Compliance Score Distribution */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Compliance Score Distribution</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('farmer.complianceScore')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="border-success">
                       <CardContent className="pt-4">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-success">67%</div>
-                          <p className="text-sm text-muted-foreground">Excellent (90-100%)</p>
+                          <p className="text-sm text-muted-foreground">90-100%</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -428,7 +420,7 @@ const RegulatorDashboard = () => {
                       <CardContent className="pt-4">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-warning">25%</div>
-                          <p className="text-sm text-muted-foreground">Good (70-89%)</p>
+                          <p className="text-sm text-muted-foreground">70-89%</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -436,7 +428,7 @@ const RegulatorDashboard = () => {
                       <CardContent className="pt-4">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-destructive">8%</div>
-                          <p className="text-sm text-muted-foreground">Needs Attention (&lt;70%)</p>
+                          <p className="text-sm text-muted-foreground">{'<70%'}</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -445,19 +437,19 @@ const RegulatorDashboard = () => {
 
                 {/* Recent Enforcement Actions */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Recent Enforcement Actions</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('regulator.complianceIssues')}</h3>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 border rounded-md">
                       <div>
-                        <p className="font-medium">Warning issued to Farm FARM001</p>
-                        <p className="text-sm text-muted-foreground">MRL violation in dairy products</p>
+                        <p className="font-medium">{t('regulator.complianceIssues')}</p>
+                        <p className="text-sm text-muted-foreground">{t('app.description')}</p>
                       </div>
                       <Badge variant="destructive">High Priority</Badge>
                     </div>
                     <div className="flex items-center justify-between p-3 border rounded-md">
                       <div>
-                        <p className="font-medium">Training scheduled for Farm FARM005</p>
-                        <p className="text-sm text-muted-foreground">Improper record keeping</p>
+                        <p className="font-medium">{t('dashboard.recentActivity')}</p>
+                        <p className="text-sm text-muted-foreground">{t('app.description')}</p>
                       </div>
                       <Badge variant="default">Medium Priority</Badge>
                     </div>

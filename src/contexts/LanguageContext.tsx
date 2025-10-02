@@ -11,7 +11,7 @@ interface LanguageContextType {
 const translations = {
   en: {
     // App Title
-    'app.title': 'Farm AMU Portal',
+    'app.title': 'PashuRaaksha',
     'app.subtitle': 'Digital Agriculture Management',
     'app.description': 'Antimicrobial Usage Management',
     
@@ -45,6 +45,21 @@ const translations = {
     'dashboard.overview': 'Overview',
     'dashboard.recentActivity': 'Recent Activity',
     'dashboard.quickActions': 'Quick Actions',
+
+    // Common Words
+    'common.welcome': 'Welcome',
+    'common.region': 'Region',
+    'common.farmId': 'Farm ID',
+    'common.viewDetails': 'View Details',
+    'common.takeAction': 'Take Action',
+    'common.acknowledge': 'Acknowledge',
+    'common.noActiveAlerts': 'No Active Alerts',
+    'common.needAttention': 'Need attention',
+    'common.awaitingVetApproval': 'Awaiting vet approval',
+    'common.currentlyOngoing': 'Currently ongoing',
+    'common.thisPeriod': 'This period',
+    'common.overallCompliance': 'Overall compliance',
+    'common.requireAttention': 'Require attention',
     
     // Farmer Dashboard
     'farmer.dashboard': 'Farmer Dashboard',
@@ -93,7 +108,7 @@ const translations = {
   },
   hi: {
     // App Title
-    'app.title': 'फार्म AMU पोर्टल',
+    'app.title': 'पशु-रक्षा',
     'app.subtitle': 'डिजिटल कृषि प्रबंधन',
     'app.description': 'रोगाणुरोधी उपयोग प्रबंधन',
     
@@ -127,6 +142,21 @@ const translations = {
     'dashboard.overview': 'सारांश',
     'dashboard.recentActivity': 'हाल की गतिविधि',
     'dashboard.quickActions': 'त्वरित कार्य',
+
+    // Common Words
+    'common.welcome': 'स्वागत है',
+    'common.region': 'क्षेत्र',
+    'common.farmId': 'फार्म आईडी',
+    'common.viewDetails': 'विवरण देखें',
+    'common.takeAction': 'कार्रवाई करें',
+    'common.acknowledge': 'स्वीकारें',
+    'common.noActiveAlerts': 'कोई सक्रिय अलर्ट नहीं',
+    'common.needAttention': 'ध्यान आवश्यक',
+    'common.awaitingVetApproval': 'पशु चिकित्सक की मंजूरी लंबित',
+    'common.currentlyOngoing': 'वर्तमान में चल रहा है',
+    'common.thisPeriod': 'इस अवधि',
+    'common.overallCompliance': 'सामान्य अनुपालन',
+    'common.requireAttention': 'ध्यान की आवश्यकता',
     
     // Farmer Dashboard
     'farmer.dashboard': 'किसान डैशबोर्ड',
@@ -175,7 +205,7 @@ const translations = {
   },
   te: {
     // App Title
-    'app.title': 'వ్యవసాయ AMU పోర్టల్',
+    'app.title': 'పశు రక్ష',
     'app.subtitle': 'డిజిటల్ వ్యవసాయ నిర్వహణ',
     'app.description': 'యాంటీమైక్రోబియల్ వాడుక నిర్వహణ',
     
@@ -209,6 +239,21 @@ const translations = {
     'dashboard.overview': 'సమీక్ష',
     'dashboard.recentActivity': 'ఇటీవలి కార్యకలాపాలు',
     'dashboard.quickActions': 'త్వరిత చర్యలు',
+
+    // Common Words
+    'common.welcome': 'స్వాగతం',
+    'common.region': 'ప్రాంతం',
+    'common.farmId': 'ఫార్మ్ ఐడి',
+    'common.viewDetails': 'వివరాలు చూడండి',
+    'common.takeAction': 'చర్య తీసుకోండి',
+    'common.acknowledge': 'అంగీకరించండి',
+    'common.noActiveAlerts': 'సక్రియ హెచ్చరికలు లేవు',
+    'common.needAttention': 'దృష్టి అవసరం',
+    'common.awaitingVetApproval': 'వైద్యుడి ఆమోదం పెండింగ్‌లో',
+    'common.currentlyOngoing': 'ప్రస్తుతం కొనసాగుతోంది',
+    'common.thisPeriod': 'ఈ కాలం',
+    'common.overallCompliance': 'మొత్తం అనుగుణత',
+    'common.requireAttention': 'శ్రద్ధ అవసరం',
     
     // Farmer Dashboard
     'farmer.dashboard': 'రైతు డ్యాష్‌బోర్డ్',

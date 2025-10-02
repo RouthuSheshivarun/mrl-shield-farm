@@ -1,4 +1,29 @@
-# Welcome to your Lovable project
+# MRL Shield Farm - Digital Farm Management Portal
+
+A comprehensive digital farm management portal for tracking and managing antimicrobial usage (AMU) in livestock while ensuring compliance with Maximum Residue Limits (MRL).
+
+## Features
+
+### 🎯 Power BI Analytics Dashboard
+- **Interactive Pie Charts**: Medicine status distribution with real-time data visualization
+- **Compliance Metrics**: Comprehensive compliance rate tracking and analysis
+- **Treatment Trends**: Monthly trends analysis with area and line charts
+- **Farm Performance**: Individual farm compliance scoring and comparison
+- **Drug Usage Analysis**: Detailed breakdown of antimicrobial drug usage patterns
+
+### 📊 Key Analytics Features
+- Treatment status distribution (Active, Completed, Withdrawn)
+- Compliance status tracking (Compliant, Pending, Violations)
+- Monthly treatment volume trends
+- Farm-wise performance comparison
+- Drug usage patterns and frequency analysis
+- Real-time KPI monitoring
+
+### 🚀 Dashboard Navigation
+- **Main Dashboard**: Role-based dashboards for Farmers, Veterinarians, and Regulators
+- **Analytics Dashboard**: Comprehensive Power BI-style analytics at `/analytics`
+- **Multi-language Support**: English, Hindi, Telugu
+- **Responsive Design**: Mobile-friendly interface
 
 ## Project info
 
@@ -54,11 +79,14 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** - Fast build tool and development server
+- **TypeScript** - Type-safe JavaScript development
+- **React** - Modern UI library with hooks
+- **shadcn-ui** - Beautiful and accessible UI components
+- **Tailwind CSS** - Utility-first CSS framework
+- **Recharts** - Powerful charting library for React
+- **React Router** - Client-side routing
+- **Lucide React** - Beautiful icon library
 
 ## How can I deploy this project?
 

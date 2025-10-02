@@ -4,7 +4,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LogOut, Tractor, Stethoscope, Shield, Bell, Globe, User, Home, Activity } from 'lucide-react';
+import { LogOut, Tractor, Stethoscope, Shield, Bell, Globe, User, Home, Activity, BarChart3 } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getRoleIcon = () => {
     switch (user?.role) {
@@ -59,6 +62,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
 
             <div className="flex items-center space-x-3">
+              {/* Navigation Buttons */}
+              <Button 
+                variant={location.pathname === '/' ? 'default' : 'ghost'} 
+                size="sm"
+                onClick={() => navigate('/')}
+              >
+                <Home className="h-4 w-4" />
+                <span className="ml-2 hidden sm:inline">Dashboard</span>
+              </Button>
+              
+              <Button 
+                variant={location.pathname === '/analytics' ? 'default' : 'ghost'} 
+                size="sm"
+                onClick={() => navigate('/analytics')}
+              >
+                <BarChart3 className="h-4 w-4" />
+                <span className="ml-2 hidden sm:inline">Analytics</span>
+              </Button>
+
               {/* Language Selector */}
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger className="w-32">

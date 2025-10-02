@@ -47,11 +47,13 @@ const Login = () => {
     },
   ];
 
+  const isValidPhone = (value: string) => /^\d{10}$/.test(value);
+
   const sendOtp = () => {
-    if (!phone || !selectedRole) {
+    if (!selectedRole || !isValidPhone(phone)) {
       toast({
         title: 'Error',
-        description: 'Please select your role and enter phone number',
+        description: 'Enter a valid 10-digit mobile number and select role',
         variant: 'destructive',
       });
       return;
@@ -66,7 +68,10 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    if (!selectedRole) return;
+    if (!selectedRole || !isValidPhone(phone)) {
+      toast({ title: 'Error', description: 'Invalid mobile number', variant: 'destructive' });
+      return;
+    }
 
     const success = await login(phone, otp, selectedRole);
     if (success) {

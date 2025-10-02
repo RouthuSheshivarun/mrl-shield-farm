@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,9 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CalendarIcon, PillIcon, AlertTriangle } from 'lucide-react';
+import { CalendarIcon, PillIcon, AlertTriangle, Languages, Mic, Volume2 } from 'lucide-react';
 import { TreatmentRecord, COMMON_DRUGS, SPECIES_OPTIONS } from '@/types';
 import { toast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AddTreatmentDialogProps {
   open: boolean;
@@ -22,6 +23,7 @@ const AddTreatmentDialog: React.FC<AddTreatmentDialogProps> = ({
   onOpenChange,
   onTreatmentAdded,
 }) => {
+  const { language, setLanguage, t } = useLanguage();
   const [formData, setFormData] = useState({
     animalTagId: '',
     species: '',
@@ -33,6 +35,46 @@ const AddTreatmentDialog: React.FC<AddTreatmentDialogProps> = ({
   });
 
   const [selectedDrug, setSelectedDrug] = useState<typeof COMMON_DRUGS[0] | null>(null);
+
+  const recognitionRef = useRef<any>(null);
+
+  const speechLang = useMemo(() => (language === 'te' ? 'te-IN' : 'en-IN'), [language]);
+
+  const speakText = (text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      toast({ title: 'Voice not supported', description: 'Your browser does not support speech', variant: 'destructive' });
+      return;
+    }
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = speechLang;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  };
+
+  const startDictation = () => {
+    const SpeechRecognition: any = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if (!SpeechRecognition) {
+      toast({ title: 'Voice not supported', description: 'Speech recognition is not available', variant: 'destructive' });
+      return;
+    }
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = speechLang;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript as string;
+      setFormData(prev => ({ ...prev, purpose: prev.purpose ? prev.purpose + ' ' + transcript : transcript }));
+    };
+    recognition.onerror = () => {
+      toast({ title: 'Voice error', description: 'Could not capture speech, try again', variant: 'destructive' });
+    };
+    recognition.start();
+    recognitionRef.current = recognition;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,11 +163,27 @@ const AddTreatmentDialog: React.FC<AddTreatmentDialogProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <PillIcon className="h-5 w-5 mr-2" />
-            Add Treatment Record / उपचार रिकॉर्ड जोड़ें
+            {t('treatment.add')}
           </DialogTitle>
           <DialogDescription>
-            Record antimicrobial treatment details for compliance tracking
+            {t('app.description')}
           </DialogDescription>
+          <div className="flex items-center gap-2 mt-2">
+            <Languages className="h-4 w-4" />
+            <Select value={language} onValueChange={(val: any) => setLanguage(val)}>
+              <SelectTrigger className="w-36 h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="te">తెలుగు</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="button" variant="ghost" size="sm" onClick={() => speakText(t('treatment.add'))}>
+              <Volume2 className="h-4 w-4 mr-1" />
+              {t('dashboard.quickActions')}
+            </Button>
+          </div>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -234,7 +292,13 @@ const AddTreatmentDialog: React.FC<AddTreatmentDialogProps> = ({
 
           {/* Purpose */}
           <div className="space-y-2">
-            <Label htmlFor="purpose">Treatment Purpose / उपचार का उद्देश्य</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="purpose">{t('treatment.purpose')}</Label>
+              <Button type="button" variant="outline" size="sm" onClick={startDictation}>
+                <Mic className="h-4 w-4 mr-2" />
+                Voice
+              </Button>
+            </div>
             <Textarea
               id="purpose"
               placeholder="e.g., Mastitis treatment, Respiratory infection"
@@ -285,10 +349,10 @@ const AddTreatmentDialog: React.FC<AddTreatmentDialogProps> = ({
           <div className="flex space-x-2 pt-4">
             <Button type="submit" className="flex-1">
               <CalendarIcon className="h-4 w-4 mr-2" />
-              Add Treatment Record
+              {t('treatment.save')}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('treatment.cancel')}
             </Button>
           </div>
         </form>
